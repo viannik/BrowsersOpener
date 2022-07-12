@@ -23,10 +23,11 @@ link = config['browser']['link']
 choice_kill = input("Удалять старые вкладки [y / n]: ")
 
 if choice_kill == 'y':
-    if dict_of_browsers[config['browser']['type']] == 1:
-        os.system('taskkill /F /IM brave.exe /T > nul 2>&1')
+    if int(config['browser']['type']) == 1:
+        os.system('taskkill /IM brave.exe /T > nul 2>&1')
     else:
-        os.system('taskkill /F /IM chrome.exe /T > nul 2>&1')
+        for number in range(int(config['browser']['count_of_profiles'])):
+            os.system('taskkill /IM chrome.exe > nul 2>&1')
     choice_kill = True
 else:
     choice_kill = False
