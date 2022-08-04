@@ -23,7 +23,6 @@ from tkinter.constants import *
 
 import BrowsersOpener_support
 
-
 browser_type = ''
 browser_exe_path = ''
 user_data = ''
@@ -133,7 +132,8 @@ def button_create_group():
         profileInput = browser.execute_script(f'return {js_rename_path}')
         profileInput.click()
         profileInput.clear()
-        profileInput.send_keys(f"{BrowsersOpener_support.create_group_name.get()} {number-int(profiles_data[browser_type]['last_number'])}")
+        profileInput.send_keys(
+            f"{BrowsersOpener_support.create_group_name.get()} {number - int(profiles_data[browser_type]['last_number'])}")
         profileInput.send_keys(Keys.ENTER)
 
         browser.close()
@@ -141,16 +141,20 @@ def button_create_group():
 
     rename_default_profile('Default Profile')
 
-    for number in range(int(profiles_data[browser_type]['last_number']), int(BrowsersOpener_support.create_group_count.get()) + int(profiles_data[browser_type]['last_number'])):
+    for number in range(int(profiles_data[browser_type]['last_number']),
+                        int(BrowsersOpener_support.create_group_count.get()) + int(
+                                profiles_data[browser_type]['last_number'])):
         rename_profile(number)
 
-    alarm(f'Group {int(profiles_data[browser_type]["last_group"])} ({BrowsersOpener_support.create_group_name.get()} 0-{int(BrowsersOpener_support.create_group_count.get())}) created!')
+    alarm(
+        f'Group {int(profiles_data[browser_type]["last_group"])} ({BrowsersOpener_support.create_group_name.get()} 0-{int(BrowsersOpener_support.create_group_count.get())}) created!')
 
     old = profiles_data[browser_type]["profiles"]
     new = old + f"{BrowsersOpener_support.create_group_name.get()};{int(profiles_data[browser_type]['last_number'])};{int(BrowsersOpener_support.create_group_count.get()) + int(profiles_data[browser_type]['last_number']) - 1},"
     profiles_data.set(browser_type, 'profiles', new)
 
-    profiles_data.set(browser_type, 'last_number', str(int(BrowsersOpener_support.create_group_count.get()) + int(profiles_data[browser_type]['last_number'])))
+    profiles_data.set(browser_type, 'last_number', str(int(BrowsersOpener_support.create_group_count.get()) + int(
+        profiles_data[browser_type]['last_number'])))
     profiles_data.set(browser_type, 'last_group', str(int(profiles_data[browser_type]["last_group"]) + 1))
 
     with open('profiles_data.ini', 'w') as configfile:
@@ -171,6 +175,8 @@ def new_type_of_browser():
 
 
 spinboxt_groups = None
+
+
 def update_group_spinbox():
     global spinboxt_groups
     spinboxt_groups.configure(state="normal")
@@ -192,6 +198,8 @@ def update_group_spinbox():
 
 
 listbot_groups = None
+
+
 def update_extension_listbox():
     global listbot_groups
     try:
@@ -243,7 +251,8 @@ def delete_current_group_confirm():
     with open(f'{user_data}\\Local State', 'w') as file:
         json.dump(data, file)
 
-    new_profiles = profiles_data[browser_type]['profiles'].replace(array[int(BrowsersOpener_support.groups_of_browser.get().split(' ')[1])] + ',', '')
+    new_profiles = profiles_data[browser_type]['profiles'].replace(
+        array[int(BrowsersOpener_support.groups_of_browser.get().split(' ')[1])] + ',', '')
     profiles_data.set(browser_type, 'profiles', new_profiles)
     profiles_data.set(browser_type, 'last_group', str(int(profiles_data[browser_type]['last_group']) - 1))
     with open('profiles_data.ini', 'w') as configfile:
@@ -278,7 +287,10 @@ def open_current_group():
         global browser_exe_path
         global user_data
         global js_rename_path
-        subprocess.Popen(f'"{browser_exe_path}"' + ' --start-maximized' + f' --user-data-dir="{user_data}"' + f' --profile-directory="BrowsersOpener_profile {number}"' + (" --restore-last-session" if profiles_data[browser_type]["save_tabs"] == "1" else '') + f' "{BrowsersOpener_support.link_open.get()}"')
+        subprocess.Popen(
+            f'"{browser_exe_path}"' + ' --start-maximized' + f' --user-data-dir="{user_data}"' + f' --profile-directory="BrowsersOpener_profile {number}"' + (
+                " --restore-last-session" if profiles_data[browser_type][
+                                                 "save_tabs"] == "1" else '') + f' "{BrowsersOpener_support.link_open.get()}"')
         time.sleep(ANTI_LAG_DELAY)
 
     for number in range(int(mini_array[1]), int(mini_array[2]) + 1):
@@ -295,9 +307,9 @@ def open_current_group():
 
 def open_window_open_from_to():
     get_browser_info()
-    #global _top4, _w4
-    #_top4 = tk.Toplevel(BrowsersOpener_support.root)
-    #_w4 = Open_from_to(_top4)
+    # global _top4, _w4
+    # _top4 = tk.Toplevel(BrowsersOpener_support.root)
+    # _w4 = Open_from_to(_top4)
     global user_data
     with open(f'{user_data}\\Local State', 'r') as file:
         data = json.load(file)
@@ -365,7 +377,8 @@ def uninstall_extension():
         'chromium': ['Chromium']
     }
 
-    profiles_data.set(browser_type, 'extensions', profiles_data[browser_type]['extensions'].replace(f"{listbot_groups.get(tk.ANCHOR)},", ''))
+    profiles_data.set(browser_type, 'extensions',
+                      profiles_data[browser_type]['extensions'].replace(f"{listbot_groups.get(tk.ANCHOR)},", ''))
     with open('profiles_data.ini', 'w') as configfile:
         profiles_data.write(configfile)
 
@@ -378,7 +391,8 @@ def uninstall_extension():
         str_for_ping_extensions += f'"{i}":' + ' {"toolbar_pin": "force_pinned", "installation_mode": "normal_installed", "update_url": "https://clients2.google.com/service/update2/crx"},'
     str_for_ping_extensions += ' }'
 
-    registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0, winreg.KEY_WRITE)
+    registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0,
+                                  winreg.KEY_WRITE)
     winreg.SetValueEx(registry_key, 'ExtensionSettings', 0, winreg.REG_SZ, str_for_ping_extensions)
     winreg.CloseKey(registry_key)
 
@@ -409,7 +423,8 @@ def install_extension():
     for i in dict_of_browsers[browser_type]:
         browser_registry += i + '\\'
 
-    profiles_data.set(browser_type, 'extensions', f"{profiles_data[browser_type]['extensions']}{BrowsersOpener_support.extension_input.get()},")
+    profiles_data.set(browser_type, 'extensions',
+                      f"{profiles_data[browser_type]['extensions']}{BrowsersOpener_support.extension_input.get()},")
 
     with open('profiles_data.ini', 'w') as configfile:
         profiles_data.write(configfile)
@@ -422,13 +437,16 @@ def install_extension():
     registry_key = None
 
     try:
-        registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0, winreg.KEY_WRITE)
+        registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0,
+                                      winreg.KEY_WRITE)
     except:
         registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies', 0, winreg.KEY_WRITE)
         winreg.CreateKey(registry_key, f'{browser_registry}')
-        registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0, winreg.KEY_WRITE)
+        registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0,
+                                      winreg.KEY_WRITE)
 
-    registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0, winreg.KEY_WRITE)
+    registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'SOFTWARE\\Policies\\{browser_registry}', 0,
+                                  winreg.KEY_WRITE)
     winreg.SetValueEx(registry_key, 'ExtensionSettings', 0, winreg.REG_SZ, str_for_ping_extensions)
     winreg.CloseKey(registry_key)
 
@@ -486,12 +504,14 @@ def login_metamasks():
                 options.add_argument(f'--profile-directory=BrowsersOpener_profile {j}')
 
                 browser = webdriver.Chrome('chromedriver.exe', options=options)
-                browser.get(f'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#initialize/create-password/import-with-seed-phrase')
+                browser.get(
+                    f'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#initialize/create-password/import-with-seed-phrase')
 
                 for i in range(len_of_phrase):
                     while True:
                         try:
-                            phrase_input = browser.execute_script(f'return document.querySelector("#import-srp__srp-word-{i}")')
+                            phrase_input = browser.execute_script(
+                                f'return document.querySelector("#import-srp__srp-word-{i}")')
                             phrase_input.click()
                             phrase_input.send_keys(phrase[i])
                             phrase_input.send_keys(Keys.ENTER)
@@ -510,16 +530,19 @@ def login_metamasks():
                 confirm_password_input.send_keys(phrase[-1])
                 confirm_password_input.send_keys(Keys.ENTER)
 
-                check_box = browser.execute_script(f'return document.querySelector("#create-new-vault__terms-checkbox")')
+                check_box = browser.execute_script(
+                    f'return document.querySelector("#create-new-vault__terms-checkbox")')
                 check_box.click()
 
-                confirm_button = browser.execute_script(f'return document.querySelector("#app-content > div > div.main-container-wrapper > div > div > div.first-time-flow__import > form > button")')
+                confirm_button = browser.execute_script(
+                    f'return document.querySelector("#app-content > div > div.main-container-wrapper > div > div > div.first-time-flow__import > form > button")')
                 confirm_button.click()
 
                 number += 1
                 while True:
                     try:
-                        last_button = browser.execute_script('return document.querySelector("#app-content > div > div.main-container-wrapper > div > div > button")')
+                        last_button = browser.execute_script(
+                            'return document.querySelector("#app-content > div > div.main-container-wrapper > div > div > button")')
                         last_button.click()
                         break
                     except:
@@ -680,14 +703,16 @@ def auto_log_metamask():
     for j in range(from_, to_):
         password = phrases[number].split(',')[-1]
 
-        subprocess.Popen(f'"{browser_exe_path}"' + ' --start-maximized' + f' --user-data-dir="{user_data}"' + f' --profile-directory="BrowsersOpener_profile {j}"' + ' "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#unlock"')
+        subprocess.Popen(
+            f'"{browser_exe_path}"' + ' --start-maximized' + f' --user-data-dir="{user_data}"' + f' --profile-directory="BrowsersOpener_profile {j}"' + ' "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#unlock"')
 
-        loaded = pyautogui.locateOnScreen('area.png')
+        loaded = pyautogui.locateCenterOnScreen('area.png')
+
         while not loaded:
-            loaded = pyautogui.locateOnScreen('area.png')
+            loaded = pyautogui.locateCenterOnScreen('area.png')
 
         pyautogui.write(password)
-        pyautogui.click('area.png')
+        pyautogui.press('enter')
 
     alarm(f"Group successfully logged Metamasks!")
 
@@ -698,27 +723,27 @@ class Toplevel1:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
-        _tabfg1 = 'black' 
-        _tabfg2 = 'black' 
-        _tabbg1 = 'grey75' 
-        _tabbg2 = 'grey89' 
-        _bgmode = 'light' 
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
+        _tabfg1 = 'black'
+        _tabfg2 = 'black'
+        _tabbg1 = 'grey75'
+        _tabbg2 = 'grey89'
+        _bgmode = 'light'
         self.style = ttk.Style()
         if sys.platform == "win32":
             self.style.theme_use('winnative')
-        self.style.configure('.',background=_bgcolor)
-        self.style.configure('.',foreground=_fgcolor)
-        self.style.configure('.',font="TkDefaultFont")
-        self.style.map('.',background=
-            [('selected', _compcolor), ('active',_ana2color)])
+        self.style.configure('.', background=_bgcolor)
+        self.style.configure('.', foreground=_fgcolor)
+        self.style.configure('.', font="TkDefaultFont")
+        self.style.map('.', background=
+        [('selected', _compcolor), ('active', _ana2color)])
 
         top.geometry("300x470+476+140")
         top.minsize(120, 1)
         top.maxsize(1540, 825)
-        top.resizable(0,  0)
+        top.resizable(0, 0)
         top.title("Browsers Opener")
         top.configure(background="#d9d9d9")
         top.configure(cursor="arrow")
@@ -739,7 +764,7 @@ class Toplevel1:
         self.Spinbox1.configure(insertbackground="black")
         self.Spinbox1.configure(selectbackground="#c4c4c4")
         self.Spinbox1.configure(selectforeground="black")
-        self.value_list = ['Chrome','Brave','Chromium',]
+        self.value_list = ['Chrome', 'Brave', 'Chromium', ]
         self.Spinbox1.configure(values=self.value_list)
         self.Spinbox1.configure(values=self.value_list)
         self.Spinbox1.configure(textvariable=BrowsersOpener_support.type_of_browser)
@@ -795,8 +820,8 @@ class Toplevel1:
         self.TSeparator1 = ttk.Separator(self.top)
         self.TSeparator1.place(x=0, y=136, width=300)
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+        self.menubar = tk.Menu(top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        top.configure(menu=self.menubar)
 
         self.TSeparator1_1 = ttk.Separator(self.top)
         self.TSeparator1_1.place(x=0, y=42, width=300)
@@ -816,7 +841,7 @@ class Toplevel1:
         self.Button3.configure(text='''Open the link in the selected Group''')
 
         self.Button4 = tk.Button(self.top)
-        #self.Button4.place(x=10, y=188, height=34, width=277)
+        # self.Button4.place(x=10, y=188, height=34, width=277)
         self.Button4.configure(activebackground="beige")
         self.Button4.configure(activeforeground="#000000")
         self.Button4.configure(background="#d9d9d9")
@@ -849,7 +874,7 @@ class Toplevel1:
         self.TSeparator3 = ttk.Separator(self.top)
         self.TSeparator3.place(x=0, y=282, width=300)
 
-        #close without saving tabs
+        # close without saving tabs
         self.Button6 = tk.Button(self.top)
         self.Button6.place(x=10, y=292, height=34, width=277)
         self.Button6.configure(activebackground="beige")
@@ -923,19 +948,19 @@ class Create_group:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
-        _tabfg1 = 'black' 
-        _tabfg2 = 'black' 
-        _tabbg1 = 'grey75' 
-        _tabbg2 = 'grey89' 
-        _bgmode = 'light' 
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
+        _tabfg1 = 'black'
+        _tabfg2 = 'black'
+        _tabbg1 = 'grey75'
+        _tabbg2 = 'grey89'
+        _bgmode = 'light'
 
         top.geometry("200x100+775+141")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
-        top.resizable(0,  0)
+        top.resizable(0, 0)
         top.title("Create Group")
         top.configure(background="#d9d9d9")
 
@@ -998,19 +1023,19 @@ class Open_from_to:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
-        _tabfg1 = 'black' 
-        _tabfg2 = 'black' 
-        _tabbg1 = 'grey75' 
-        _tabbg2 = 'grey89' 
-        _bgmode = 'light' 
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
+        _tabfg1 = 'black'
+        _tabfg2 = 'black'
+        _tabbg1 = 'grey75'
+        _tabbg2 = 'grey89'
+        _bgmode = 'light'
 
         top.geometry("200x200+774+271")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
-        top.resizable(0,  0)
+        top.resizable(0, 0)
         top.title("Open from-to")
         top.configure(background="#d9d9d9")
 
@@ -1045,7 +1070,7 @@ class Open_from_to:
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
-        self.Button1.configure(command=lambda :BrowsersOpener_support.print('open_open'))
+        self.Button1.configure(command=lambda: BrowsersOpener_support.print('open_open'))
         self.Button1.configure(compound='left')
         self.Button1.configure(disabledforeground="#a3a3a3")
         self.Button1.configure(foreground="#000000")
@@ -1061,19 +1086,19 @@ class Extensions:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
-        _tabfg1 = 'black' 
-        _tabfg2 = 'black' 
-        _tabbg1 = 'grey75' 
-        _tabbg2 = 'grey89' 
-        _bgmode = 'light' 
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
+        _tabfg1 = 'black'
+        _tabfg2 = 'black'
+        _tabbg1 = 'grey75'
+        _tabbg2 = 'grey89'
+        _bgmode = 'light'
 
         top.geometry("200x200+775+502")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
-        top.resizable(0,  0)
+        top.resizable(0, 0)
         top.title("Extensions")
         top.configure(background="#d9d9d9")
 
@@ -1127,25 +1152,26 @@ class Extensions:
         self.Button1.configure(pady="0")
         self.Button1.configure(text='''Install''')
 
+
 class Special_options:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
-        _tabfg1 = 'black' 
-        _tabfg2 = 'black' 
-        _tabbg1 = 'grey75' 
-        _tabbg2 = 'grey89' 
-        _bgmode = 'light' 
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
+        _tabfg1 = 'black'
+        _tabfg2 = 'black'
+        _tabbg1 = 'grey75'
+        _tabbg2 = 'grey89'
+        _bgmode = 'light'
 
         top.geometry("200x140+976+141")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
-        top.resizable(0,  0)
+        top.resizable(0, 0)
         top.title("Special Options")
         top.configure(background="#d9d9d9")
 
@@ -1200,9 +1226,9 @@ class Deleting_group:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = 'gray40' # X11 color: #666666
-        _ana1color = '#c3c3c3' # Closest X11 color: 'gray76'
-        _ana2color = 'beige' # X11 color: #f5f5dc
+        _compcolor = 'gray40'  # X11 color: #666666
+        _ana1color = '#c3c3c3'  # Closest X11 color: 'gray76'
+        _ana2color = 'beige'  # X11 color: #f5f5dc
         _tabfg1 = 'black'
         _tabfg2 = 'black'
         _tabbg1 = 'grey75'
@@ -1233,13 +1259,9 @@ class Deleting_group:
         self.Button1.configure(command=delete_current_group_confirm)
 
 
-
 def start_up():
     BrowsersOpener_support.main()
 
+
 if __name__ == '__main__':
     BrowsersOpener_support.main()
-
-
-
-
