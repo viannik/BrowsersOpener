@@ -16,7 +16,7 @@ from selenium.webdriver.common.keys import Keys
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-import sys, os
+import sys, os, shutil
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
@@ -717,6 +717,38 @@ def auto_log_metamask():
     alarm(f"Group successfully logged Metamasks!")
 
 
+def copy_extension_settings():
+    if BrowsersOpener_support.groups_of_browser.get() == '':
+        alarm('Error: you need to select a group!')
+        return
+
+    get_browser_info()
+    global browser_type
+    global browser_exe_path
+    global user_data
+    global js_rename_path
+
+    array = profiles_data[browser_type]['profiles'].split(',')[:-1]
+    mini_array = array[int(BrowsersOpener_support.groups_of_browser.get().split(' ')[1])].split(';')
+
+    from_ = int(mini_array[1])
+    to_ = int(mini_array[2]) + 1
+
+    dirlist = [
+        'Local Extension Settings',
+        'Sync Extension Settings'
+    ]
+
+    for j in range(from_ + 1, to_):
+        for dirname in dirlist:
+            root_src_dir = f'{user_data}\\BrowsersOpener_profile 0\\{dirname}'
+            root_dst_dir = f'{user_data}\\BrowsersOpener_profile {j}\\{dirname}'
+
+            shutil.copytree(root_src_dir, root_dst_dir, dirs_exist_ok=True)
+
+    alarm(f"Extensions settings successfully copied!")
+
+
 class Toplevel1:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
@@ -1168,7 +1200,7 @@ class Special_options:
         _tabbg2 = 'grey89'
         _bgmode = 'light'
 
-        top.geometry("200x140+976+141")
+        top.geometry("470x170+976+141")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
         top.resizable(0, 0)
@@ -1178,7 +1210,7 @@ class Special_options:
         self.top = top
 
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(x=10, y=10, height=34, width=177)
+        self.Button1.place(x=10, y=10, height=34, width=450)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
@@ -1192,7 +1224,7 @@ class Special_options:
         self.Button1.configure(text='''Metamask''')
 
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(x=10, y=50, height=34, width=177)
+        self.Button1.place(x=10, y=50, height=34, width=450)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
@@ -1206,7 +1238,7 @@ class Special_options:
         self.Button1.configure(text='''Login Metamask''')
 
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(x=10, y=90, height=34, width=177)
+        self.Button1.place(x=10, y=90, height=34, width=450)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
@@ -1218,6 +1250,20 @@ class Special_options:
         self.Button1.configure(command=login_proxies)
         self.Button1.configure(pady="0")
         self.Button1.configure(text='''Proxy''')
+
+        self.Button1 = tk.Button(self.top)
+        self.Button1.place(x=10, y=130, height=34, width=450)
+        self.Button1.configure(activebackground="beige")
+        self.Button1.configure(activeforeground="#000000")
+        self.Button1.configure(background="#d9d9d9")
+        self.Button1.configure(compound='left')
+        self.Button1.configure(disabledforeground="#a3a3a3")
+        self.Button1.configure(foreground="#000000")
+        self.Button1.configure(highlightbackground="#d9d9d9")
+        self.Button1.configure(highlightcolor="black")
+        self.Button1.configure(command=copy_extension_settings)
+        self.Button1.configure(pady="0")
+        self.Button1.configure(text='''Copy extension settings from GroupName 0 to all Group''')
 
 
 class Deleting_group:
