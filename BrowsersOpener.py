@@ -108,6 +108,8 @@ def button_create_group():
         profileInput.send_keys(name)
         profileInput.send_keys(Keys.ENTER)
 
+        time.sleep(1)
+
         browser.close()
         browser.quit()
 
@@ -136,6 +138,8 @@ def button_create_group():
             f"{BrowsersOpener_support.create_group_name.get()} {number - int(profiles_data[browser_type]['last_number'])}")
         profileInput.send_keys(Keys.ENTER)
 
+        time.sleep(1)
+
         browser.close()
         browser.quit()
 
@@ -143,7 +147,7 @@ def button_create_group():
 
     for number in range(int(profiles_data[browser_type]['last_number']),
                         int(BrowsersOpener_support.create_group_count.get()) + int(
-                                profiles_data[browser_type]['last_number'])):
+                            profiles_data[browser_type]['last_number'])):
         rename_profile(number)
 
     alarm(
@@ -534,6 +538,8 @@ def login_metamasks():
                     f'return document.querySelector("#create-new-vault__terms-checkbox")')
                 check_box.click()
 
+                time.sleep(0.5)
+
                 confirm_button = browser.execute_script(
                     f'return document.querySelector("#app-content > div > div.main-container-wrapper > div > div > div.first-time-flow__import > form > button")')
                 confirm_button.click()
@@ -661,7 +667,7 @@ def login_proxies():
                     'return document.querySelector("body > div.container-fluid > header > nav > li:nth-child(12) > a")').click()
 
                 number += 1
-                time.sleep(1)
+                time.sleep(2)
                 browser.quit()
                 break
             except:
@@ -706,9 +712,11 @@ def auto_log_metamask():
         subprocess.Popen(
             f'"{browser_exe_path}"' + ' --start-maximized' + f' --user-data-dir="{user_data}"' + f' --profile-directory="BrowsersOpener_profile {j}"' + ' "chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html#unlock"')
 
+        time.sleep(2)
+
         loaded = pyautogui.locateCenterOnScreen('area.png')
 
-        while not loaded:
+        while loaded is None:
             loaded = pyautogui.locateCenterOnScreen('area.png')
 
         pyautogui.write(password)
@@ -741,7 +749,7 @@ def copy_extension_settings():
 
     for j in range(from_ + 1, to_):
         for dirname in dirlist:
-            root_src_dir = f'{user_data}\\BrowsersOpener_profile 0\\{dirname}'
+            root_src_dir = f'{user_data}\\BrowsersOpener_profile {from_}\\{dirname}'
             root_dst_dir = f'{user_data}\\BrowsersOpener_profile {j}\\{dirname}'
 
             shutil.copytree(root_src_dir, root_dst_dir, dirs_exist_ok=True)
@@ -1127,7 +1135,7 @@ class Extensions:
         _tabbg2 = 'grey89'
         _bgmode = 'light'
 
-        top.geometry("200x200+775+502")
+        top.geometry("368x200+775+502")
         top.minsize(120, 1)
         top.maxsize(1540, 845)
         top.resizable(0, 0)
@@ -1137,7 +1145,7 @@ class Extensions:
         self.top = top
 
         self.Listbox1 = tk.Listbox(self.top)
-        self.Listbox1.place(x=10, y=10, height=66, width=174)
+        self.Listbox1.place(x=10, y=10, height=66, width=350)
         self.Listbox1.configure(background="white")
         self.Listbox1.configure(disabledforeground="#a3a3a3")
         self.Listbox1.configure(font="TkFixedFont")
@@ -1148,7 +1156,7 @@ class Extensions:
         update_extension_listbox()
 
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(x=10, y=90, height=34, width=177)
+        self.Button1.place(x=10, y=90, height=34, width=350)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
@@ -1162,7 +1170,7 @@ class Extensions:
         self.Button1.configure(text='''Uninstall''')
 
         self.Entry1 = tk.Entry(self.top)
-        self.Entry1.place(x=10, y=130, height=20, width=174)
+        self.Entry1.place(x=10, y=130, height=20, width=350)
         self.Entry1.configure(background="white")
         self.Entry1.configure(disabledforeground="#a3a3a3")
         self.Entry1.configure(font="TkFixedFont")
@@ -1171,7 +1179,7 @@ class Extensions:
         self.Entry1.configure(textvariable=BrowsersOpener_support.extension_input)
 
         self.Button1 = tk.Button(self.top)
-        self.Button1.place(x=10, y=160, height=34, width=177)
+        self.Button1.place(x=10, y=160, height=34, width=350)
         self.Button1.configure(activebackground="beige")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
